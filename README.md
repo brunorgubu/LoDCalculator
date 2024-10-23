@@ -31,9 +31,6 @@ When an analysis is executed, you can view:
 ### Relative Data Comparison
 LoDCalculator can compare models of different scales, whether they consist of a single mesh or multiple complex meshes.
 
-### Examples
-Usage examples with their corresponding scores will be provided to illustrate the capabilities of LoDCalculator.
-
 ## Uninstallation
 To uninstall LoDCalculator:
 1. Go back to Blender's Preferences.
