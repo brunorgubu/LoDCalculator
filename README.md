@@ -45,9 +45,12 @@ To uninstall LoDCalculator:
     Navigate to the Add-ons section.
     Click on Uninstall for LoDCalculator.
 
+
 Contributing
 
 If you would like to contribute to LoDCalculator, feel free to fork the repository and submit a pull request.
+
+
 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
