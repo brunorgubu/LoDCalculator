@@ -8,12 +8,12 @@ import builtins as __builtin__
 # Add-on information
 bl_info = {
     "name": "LoDCalculator",
-    "author": "3DUBU",
+    "author": "XRAILab",
     "version": (1, 0),
     "blender": (2, 80, 0),
     "location": "Properties > Scene Properties > LoDCalculator",
     "description": "Calculate the level of detail of an object on a scale of 1 to 5. Separate the score between radiometric and geometric fidelity, both on a scale of 1 to 3",
-    "warning": "Only the selected object is scanned. It is necessary that the object is not triangulated for the data to be reliable. Unused materials or textures need to be removed for the data to be reliable.",
+    "warning": "Only the selected object is evaluated. It is necessary that the object is not triangulated for the data to be reliable. Unused materials or textures need to be removed for the data to be reliable.",
     "doc_url": "",
     "category": "",
 }
@@ -48,7 +48,20 @@ class LoDCalculator(bpy.types.Operator):
     # Execute main function of LoDCalculator
     def execute(self, context):
         
+        # Check if there are selected objects
+        selected_objects = bpy.context.selected_objects
+        obj = bpy.context.active_object
         
+        if not selected_objects:
+            error = "No object selected"
+            LoDCalculator.error = error
+            return {'CANCELLED'}
+        
+        # Check if the selected object is of type mesh
+        if obj.type != 'MESH':
+            error = "Selected object is not a mesh"
+            LoDCalculator.error = error
+            return {'CANCELLED'}
         # OBTAINING GEOMETRIC INFORMATION
         
         # Import mesh data and count the faces
@@ -299,7 +312,7 @@ class LoDCalculator(bpy.types.Operator):
         if (number_materials <1 ) and (number_textures < 1):
             error = "The selected object has not textures and materials"
         if (number_materials < 2) and (number_textures < 1):
-            error = "The selected object is not 3D and has not textures"
+            error = "The selected object has not textures"
         if (face_number < 2) and (number_textures < 1):
             error = "The selected object is not 3D and has not materials"   
         
@@ -363,10 +376,10 @@ class LayoutDemoPanel(bpy.types.Panel):
         col.label(text=str(LoDCalculator. geometrical_fidelity) + " out of 3")
 
         col.label(text="Last interquartile range: ")
-        col.label(text=str(LoDCalculator.last_interquartile_range))
+        col.label(text=str(round(LoDCalculator.last_interquartile_range, 2)))
         
         col.label(text="Mean angle: ")
-        col.label(text=str(LoDCalculator.mean_angle))
+        col.label(text=str(round(LoDCalculator.mean_angle, 2)))
         
         col.label(text="Number of faces: ")
         col.label(text=str(LoDCalculator.face_number))
@@ -375,30 +388,21 @@ class LayoutDemoPanel(bpy.types.Panel):
         col.label(text=str(LoDCalculator.loose_parts))
         
         col.label(text="Faces by mesh: ")
-        col.label(text=str(LoDCalculator.proportion_of_faces))
+        col.label(text=str(round(LoDCalculator.proportion_of_faces, 2)))
         
         # Radiometrical fidelity column
         col = split.column(align=True)
         col.label(text="Radiometrical Fidelity score: ")
         col.label(text=str(LoDCalculator.radiometrical_fidelity)+ " out of 3")
         
-        col.label(text="Pixel density score: ")
-        col.label(text=str(LoDCalculator.pixel_density_punctuation)+ " out of 3")
-        
-        col.label(text="Material quality score: ")
-        col.label(text=str(LoDCalculator.material_quality_puntuation)+ " out of 3")
-        
-        col.label(text="Images by material: ")
-        col.label(text=str(LoDCalculator.proportion_materials_images))
-        
-        col.label(text="Pixel density value: ")
-        col.label(text=str(LoDCalculator.pixel_density))
-        
         col.label(text="Average UV area by face: ")
-        col.label(text=str(LoDCalculator.average_UV_area))
+        col.label(text=str(round(LoDCalculator.average_UV_area, 4)))
+        
+        col.label(text="Percentaje of tiled faces: ")
+        col.label(text=str(round(LoDCalculator.tiled_percentaje, 2)))
         
         col.label(text="Average textures resolution: ")
-        col.label(text=str(LoDCalculator.average_resolution))
+        col.label(text=str(round(LoDCalculator.average_resolution, 2)))
         
         col.label(text="Number of textures: ")
         col.label(text=str(LoDCalculator.number_textures))
@@ -406,8 +410,8 @@ class LayoutDemoPanel(bpy.types.Panel):
         col.label(text="Number of materials: ")
         col.label(text=str(LoDCalculator.number_materials))
         
-        col.label(text="Percentaje of tiled faces: ")
-        col.label(text=str(LoDCalculator.tiled_percentaje))
+        col.label(text="Textures by material: ")
+        col.label(text=str(round(LoDCalculator.proportion_materials_images, 2)))
     
         # Error notice row
         layout.label(text="Error notification:")
