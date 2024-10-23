@@ -2,7 +2,8 @@
 
 Overview
 
-LoDCalculator is a Blender add-on designed to analyze the level of detail (LoD) of 3D models. It evaluates geometric and radiometric fidelity, providing scores and raw data that help assess the quality of your models.
+LoDCalculator is a Blender add-on designed to analyze the level of detail of 3D models. It evaluates geometric and radiometric fidelity, providing scores and raw data that help assess the quality of your models.
+
 Installation
 
 Download the LoDCalculator.py file from this repository.
